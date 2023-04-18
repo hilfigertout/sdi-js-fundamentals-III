@@ -10,20 +10,24 @@ inputField.addEventListener('input', (eventObject) => {
 });
 
 
+
+// Helper function to create a list item in the DOM from the text it should contain.
+// Requires list ID ('#active' or '#completed') to determine which callback function to add.
 let renderListItem = (itemText, listID) => {
     let newItem = document.createElement('li');
     if (listID === '#active') {
         newItem.addEventListener('click', (eventObject) => {
-            let currentList = localStorage.getItem('currentToDoItems').split('|||');
+            let currentList = JSON.parse(localStorage.getItem('currentToDoItems'));
             currentList.splice(currentList.indexOf(eventObject.target.innerHTML), 1);
-            localStorage.setItem('currentToDoItems', currentList.join('|||'));
+            localStorage.setItem('currentToDoItems', JSON.stringify(currentList));
             renderListItem(eventObject.target.innerHTML, '#completed');
             eventObject.target.remove();
         });
     } else {
         newItem.addEventListener('click', (eventObject) => {
-            let newList = localStorage.getItem('currentToDoItems').concat('|||', eventObject.target.innerHTML);
-            localStorage.setItem('currentToDoItems', newList);
+            let newList = JSON.parse(localStorage.getItem('currentToDoItems'));
+            newList.push(newItem);
+            localStorage.setItem('currentToDoItems', JSON.stringify(newList));
             renderListItem(eventObject.target.innerHTML, '#active');
             eventObject.target.remove();
         });
@@ -33,23 +37,20 @@ let renderListItem = (itemText, listID) => {
     document.querySelector(listID).appendChild(newItem);
 }
 
-
-let oldItems = currentItems.split('|||')
-for (let i = 1; i < oldItems.length; i++) {
+let oldItems = JSON.parse(currentItems);
+for (let i = 0; i < oldItems.length; i++) {
     renderListItem(oldItems[i], '#active')
 };
 
 let btnForm = document.querySelector('#to-do-input-form');
 btnForm.addEventListener('submit', (eventObject) => {
     eventObject.preventDefault();
-    if (text !== "") {
+    if (text !== '') {
         renderListItem(text, '#active')
-        let newList = localStorage.getItem('currentToDoItems').concat('|||', text);
+        let newList = JSON.parse(localStorage.getItem('currentToDoItems'));
+        newList.push(text)
         inputField.value = '';
         text = '';
-        localStorage.setItem('currentToDoItems', newList);
+        localStorage.setItem('currentToDoItems', JSON.stringify(newList));
     }
 });
-
-
-
