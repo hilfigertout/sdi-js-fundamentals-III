@@ -26,7 +26,7 @@ let renderListItem = (itemText, listID) => {
     } else {
         newItem.addEventListener('click', (eventObject) => {
             let newList = JSON.parse(localStorage.getItem('currentToDoItems'));
-            newList.push(newItem);
+            newList.push(newItem.innerHTML);
             localStorage.setItem('currentToDoItems', JSON.stringify(newList));
             renderListItem(eventObject.target.innerHTML, '#active');
             eventObject.target.remove();
