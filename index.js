@@ -1,5 +1,10 @@
 let inputField = document.querySelector('#input1');
 let text = '';
+let currentItems = localStorage.getItem('currentToDoItems');
+if (currentItems === undefined || currentItems === null || currentItems === "") {
+    localStorage.setItem('currentToDoItems', '[]');
+}
+
 inputField.addEventListener('input', (eventObject) => {
     text = eventObject.target.value;
 });
@@ -28,10 +33,7 @@ let renderListItem = (itemText, listID) => {
     document.querySelector(listID).appendChild(newItem);
 }
 
-let currentItems = localStorage.getItem('currentToDoItems');
-if (currentItems === undefined || currentItems === null) {
-    localStorage.setItem('currentToDoItems', '');
-}
+
 let oldItems = currentItems.split('|||')
 for (let i = 1; i < oldItems.length; i++) {
     renderListItem(oldItems[i], '#active')
